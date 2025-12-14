@@ -30,7 +30,7 @@ const UsernamePrompt = ({ onJoin }) => {
         console.error("Validation error", err);
         // If check fails (e.g. server down), maybe let them try joining and let socket handle it, OR show error.
         // Let's show generic error or assume it's offline.
-        setError('Unable to validate username. Server might be offline.');
+        setError(`Connection failed to: ${baseUrl}\nError: ${err.message}\nCheck your network or server status.`);
         setLoading(false);
       }
     }
