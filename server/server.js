@@ -76,6 +76,9 @@ Object.keys(rooms).forEach(roomName => {
   checkRoomEmpty(roomName);
 });
 
+// Run initial message cleanup
+cleanupGlobalChatMessages();
+
 io.on('connection', (socket) => {
   console.log(`User connected: ${socket.id}`);
 
@@ -467,6 +470,32 @@ function getRoomList() {
 // Room Cleanup Logic
 const PUBLIC_ROOM_TIMEOUT = 60 * 1000; // 1 minute
 const PRIVATE_ROOM_TIMEOUT = 60 * 60 * 1000; // 1 hour
+const MESSAGE_RETENTION_LIMIT = 24 * 60 * 60 * 1000; // 24 hours
+
+function cleanupGlobalChatMessages() {
+  const globalChat = rooms['Global Chat'];
+  if (!globalChat || !globalChat.messages) return;
+
+  const now = Date.now();
+  const initialCount = globalChat.messages.length;
+
+  globalChat.messages = globalChat.messages.filter(msg => {
+    // If msg.timestamp is undefined, keep it (safe fallback). 
+    // Otherwise, check if it's older than 24h.
+    if (!msg.timestamp) return true;
+    const msgTime = new Date(msg.timestamp).getTime();
+    return (now - msgTime) < MESSAGE_RETENTION_LIMIT;
+  });
+
+  const finalCount = globalChat.messages.length;
+  if (finalCount < initialCount) {
+    console.log(`[Server] Cleaned up ${initialCount - finalCount} old messages from Global Chat.`);
+    saveData();
+  }
+}
+
+// Run cleanup every hour
+setInterval(cleanupGlobalChatMessages, 60 * 60 * 1000);
 
 async function checkRoomEmpty(roomName) {
   if (roomName === 'Global Chat') return;
