@@ -1,0 +1,355 @@
+/* Main 3-Column Layout */
+.main-layout {
+  display: flex;
+  width: 100vw; /* Force full viewport width */
+  height: 100vh; /* Fallback */
+  height: 100dvh; /* Dynamic Full Height for Mobile */
+  background-color: var(--color-cream-bg);
+  /* Removed border-radius and box-shadow for full screen */
+  overflow: hidden;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* Chat Container (Right Panel) */
+.chat-container {
+  flex: 1;
+  /* min-width: 0 is crucial for flex children to shrink/grow properly if content is wide */
+  min-width: 0; 
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-white);
+  /* Removed margin and border-radius for flush fit */
+  box-shadow: none; /* Shadow not needed if flush */
+  position: relative;
+  border-left: 1px solid var(--color-border); /* Add separator */
+  overflow: hidden; /* Ensure input stays put, only messages scroll */
+}
+
+/* Mobile Back Button */
+.mobile-back-btn {
+  display: none; /* Hidden on desktop */
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--color-text-dark);
+  margin-right: 15px;
+  cursor: pointer;
+}
+
+/* Mobile Layout Adjustment */
+@media (max-width: 768px) {
+  .main-layout {
+    padding-bottom: 60px; /* Space for Bottom Nav */
+    height: 100dvh; /* Ensure 100dvh on mobile too */
+    overflow: hidden;
+  }
+  
+  .mobile-back-btn {
+    display: block; /* Visible on mobile */
+    margin-right: 10px; /* Reducing margin */
+  }
+
+  /* Compact Header for Mobile */
+  .chat-header {
+    padding: 10px 15px; /* Reduced padding */
+  }
+  
+  .chat-header-user {
+    gap: 10px; /* Tighter gap */
+  }
+  
+  .avatar-placeholder img {
+    width: 36px; /* Smaller avatar on mobile */
+    height: 36px;
+  }
+  
+  .chat-header-info h3 {
+    font-size: 1rem; /* Slightly smaller text */
+  }
+  
+  .header-actions {
+    gap: 10px; /* Tighter icons */
+  }
+  
+  .icon-btn {
+    font-size: 1.1rem; /* Smaller icons */
+  }
+
+  /* Default Mobile State: Show List, Hide Chat */
+  .chat-container {
+    display: none;
+  }
+  
+  .middle-panel { /* RoomList container */
+    display: flex;
+    width: 100%;
+    flex: 1;
+  }
+  
+  /* Active Mobile Chat State: Show Chat, Hide List & Sidebar */
+  .main-layout.mobile-chat-active {
+    padding-bottom: 0; /* Remove space since sidebar is hidden */
+  }
+
+  .main-layout.mobile-chat-active .chat-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    border-left: none !important; /* Remove desktop separator on mobile */
+  }
+
+  .main-layout.mobile-chat-active .middle-panel {
+    display: none;
+  }
+
+  /* Hide Sidebar when chat is active */
+  .main-layout.mobile-chat-active .main-sidebar {
+    display: none;
+  }
+
+  /* Mobile Input Optimization */
+  /* Mobile Input Optimization */
+  .input-wrapper {
+    padding: 5px; /* Minimal padding */
+  }
+  
+  .chat-input-bar {
+    padding: 2px 5px; /* Tighter bar */
+    gap: 2px; /* Minimal gap between items */
+    width: 100%;
+    flex-wrap: nowrap; /* Force single line */
+  }
+  
+  .chat-input-bar input[type="text"] {
+    min-width: 0; /* Allow shrinking */
+    padding: 8px 5px; /* Reduce internal padding */
+    font-size: 0.9rem; /* Slightly smaller text */
+  }
+
+  .input-actions {
+    gap: 2px; /* Tighten action buttons */
+  }
+  
+  /* Hide extra icons on very small screens to fit Send button */
+  .input-actions .icon-btn:nth-child(1), /* Hide Happy Face */
+  .input-actions .icon-btn:nth-child(2) { /* Hide Camera */
+    display: none !important; 
+  }
+
+  /* Force Invite button visibility */
+  .invite-btn {
+    display: inline-block !important;
+    color: var(--color-olive-dark); /* Highlight it slightly */
+  }
+  
+  .attach-btn {
+    padding: 2px;
+    font-size: 1.1rem;
+  }
+  
+  .mic-btn, .send-btn {
+    width: 32px; /* Smaller send button */
+    height: 32px;
+    font-size: 0.9rem;
+  }
+}
+.chat-header {
+  display: flex;
+  align-items: center;
+  padding: 15px 25px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.chat-header-user {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.avatar-placeholder img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.chat-header-info h3 {
+  font-size: 1.1rem;
+  margin-bottom: 2px;
+  color: var(--color-text-dark);
+}
+
+.status-text {
+  font-size: 0.8rem;
+  color: var(--color-olive-dark);
+}
+
+.header-actions {
+  display: flex;
+  gap: 15px;
+  margin-left: auto; /* Push to right */
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #aaa;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.icon-btn:hover {
+  color: var(--color-olive-dark);
+}
+
+/* Messages Area */
+.messages-area {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-behavior: auto !important; /* Force instant scroll by default, handle smooth in JS */
+}
+
+/* Input Area */
+.input-wrapper {
+  padding: 15px 20px;
+  background-color: var(--color-white);
+  border-top: 1px solid var(--color-border);
+}
+
+.chat-input-bar {
+  display: flex;
+  align-items: center;
+  background-color: var(--color-input-bg);
+  padding: 8px 15px;
+  border-radius: 20px;
+  gap: 10px;
+}
+
+.chat-input-bar input[type="text"] {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 10px;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.attach-btn, .mic-btn, .send-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #888;
+  padding: 5px;
+}
+
+.attach-btn:hover {
+  color: var(--color-text-dark);
+}
+
+.input-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mic-btn {
+  background-color: var(--color-olive-dark); /* Color from design spec */
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1rem;
+}
+
+.send-btn {
+  background-color: var(--color-olive-dark);
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1rem;
+}
+
+/* Header Actions Responsive Logic */
+.header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-left: auto; /* Push to right */
+}
+
+.header-actions-desktop {
+  display: flex;
+  gap: 15px;
+}
+
+.mobile-menu-container {
+  position: relative;
+  display: block; 
+}
+
+/* Mobile: Hide desktop actions, show menu button (if not already) */
+@media (max-width: 768px) {
+  .header-actions-desktop {
+    display: none;
+  }
+}
+
+/* Desktop: Hide menu button */
+@media (min-width: 769px) {
+  .mobile-menu-container {
+    display: none;
+  }
+}
+
+/* Dropdown Styles */
+.mobile-menu-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  min-width: 60px; /* Compact width for icons */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border-radius: 8px;
+  padding: 5px 0;
+  z-index: 100;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center icons */
+}
+
+.mobile-menu-dropdown button {
+  display: block;
+  width: 100%;
+  text-align: center; /* Center icons */
+  padding: 12px 0;
+  background: none;
+  border: none;
+  font-size: 1.2rem; /* Larger icon size */
+  color: var(--color-text-dark);
+  cursor: pointer;
+}
+
+.mobile-menu-dropdown button:hover {
+  background-color: var(--color-cream-bg);
+  color: var(--color-olive-dark);
+}
+
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99;
+  background: transparent;
+}

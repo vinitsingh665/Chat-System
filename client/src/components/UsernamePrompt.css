@@ -1,0 +1,152 @@
+/* Theme-Aware Login */
+.username-prompt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  /* Dynamic backdrop */
+  background: var(--login-overlay-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.username-prompt-box {
+  /* Dynamic Container */
+  background: var(--login-card-bg);
+  padding: 3rem 2.5rem;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  border: var(--login-border);
+}
+
+.username-prompt-box h2 {
+  margin-bottom: 2rem;
+  color: var(--login-text);
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.username-prompt-box form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.username-prompt-box input {
+  padding: 1rem 1.2rem;
+  border-radius: var(--radius-sm);
+  border: 2px solid transparent;
+  background: var(--login-input-bg);
+  color: var(--login-input-text);
+  font-size: 1.1rem;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.username-prompt-box input::placeholder {
+  color: var(--login-text);
+  opacity: 0.6;
+}
+
+.username-prompt-box input:focus {
+  outline: none;
+  border-color: var(--login-text);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2);
+}
+
+.username-prompt-box button {
+  padding: 1rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: var(--login-btn-bg);
+  color: var(--login-btn-text);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.username-prompt-box button:hover {
+  background: var(--login-btn-hover-bg);
+  color: var(--login-btn-hover-text);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.username-prompt-box button:active {
+  transform: translateY(0);
+}
+
+.username-prompt-box {
+  background: var(--bg-card);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  border: 1px solid var(--border-color);
+}
+
+.username-prompt-box h2 {
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+}
+
+.username-prompt-box form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.username-prompt-box input {
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.username-prompt-box button {
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: none;
+  background: var(--primary-color);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.username-prompt-box button:hover {
+  opacity: 0.9;
+}
+
+.error-message {
+  color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.1);
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: -5px;
+  margin-bottom: 5px;
+  animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}

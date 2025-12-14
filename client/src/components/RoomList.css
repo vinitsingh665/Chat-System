@@ -1,0 +1,213 @@
+.middle-panel {
+  width: 320px;
+  min-width: 320px; /* Prevent shrink */
+  max-width: 320px; /* Prevent grow */
+  flex: 0 0 320px;  /* Rigid flex sizing */
+  background-color: var(--color-cream-bg);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-right: 1px solid rgba(0,0,0,0.03);
+}
+
+/* Search Bar */
+.search-container {
+  margin-bottom: 25px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: var(--color-white);
+  padding: 10px 15px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+  border: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.search-bar:focus-within {
+  border-color: var(--color-olive-light);
+}
+
+.search-icon {
+  margin-right: 10px;
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  font-size: 0.95rem;
+  color: var(--color-text-dark);
+}
+
+/* Lists */
+.lists-container {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.section-header h3 {
+  font-size: 1rem;
+  color: var(--color-text-dark);
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.item-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-white);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.list-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.list-item.active {
+  background-color: var(--color-white); /* Keep white but add border or marker */
+  border-left: 4px solid var(--color-olive-dark);
+}
+
+.item-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; /* Groups might be rounded rects but circle is standard clean */
+  margin-right: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0; /* Prevent avatar shrink */
+}
+
+.create-avatar {
+  background-color: var(--color-olive-light);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.item-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  overflow: hidden; /* Needed for text truncation */
+}
+
+.item-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-text-dark);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.item-subtext {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.online-indicator {
+  width: 10px;
+  height: 10px;
+  background-color: #22c55e;
+  border-radius: 50%;
+  border: 2px solid var(--color-white);
+  position: absolute;
+  right: 10px;
+  bottom: 15px; /* Adjust based on visuals */
+}
+
+/* Specific tweaking for "Groups" to look like cards */
+/* Unifying padding for all list items */
+/* .list-section:first-child .list-item {
+  padding: 12px;
+} */
+
+.unread-badge {
+  font-size: 0.75rem;
+  color: #ef4444; /* Red color for notification */
+  font-weight: 600;
+  margin-top: 5px; /* Added a bit more space */
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Pin Action Styles (Newly Integrated) */
+.pin-action {
+  display: none; /* Hidden by default on desktop until hover */
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  font-size: 1rem;
+  margin-left: 8px;
+  color: #aaa;
+  transition: all 0.2s;
+}
+
+.pin-action:hover {
+  background-color: rgba(0,0,0,0.05); /* Subtle hover */
+  color: var(--color-olive-dark);
+}
+
+.list-item:hover .pin-action {
+  display: block; /* Show on hover for desktop */
+}
+
+/* On Mobile, always show the pin button because there is no hover */
+@media (max-width: 768px) {
+  .pin-action {
+    display: block;
+    opacity: 0.7;
+  }
+}
+
+.pinned-icon-small {
+  font-size: 0.7rem;
+  color: var(--color-olive-dark);
+}
+
+.online-indicator.dnd {
+  background-color: #f97316 !important; /* Orange-500 */
+}

@@ -1,0 +1,112 @@
+.invite-modal-content {
+    width: 400px;
+    max-width: 90vw;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--color-text-dark);
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--color-text-light);
+}
+
+.invite-search {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-input-bg);
+    color: var(--color-text-dark);
+    margin-bottom: 20px;
+    outline: none;
+}
+
+.invite-search:focus {
+    border-color: var(--color-olive-light);
+}
+
+.invite-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 300px;
+    overflow-y: auto;
+    border-top: 1px solid var(--color-border);
+}
+
+.invite-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.invite-item:last-child {
+    border-bottom: none;
+}
+
+.invite-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.invite-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.invite-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.invite-username {
+    font-weight: 500;
+    color: var(--color-text-dark);
+}
+
+.btn-invite {
+    background-color: var(--color-olive-dark);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.btn-invite:hover {
+    background-color: var(--color-olive-light);
+}
+
+.btn-invite.sent {
+    background-color: #10B981; /* Green for success */
+    cursor: default;
+    opacity: 0.8;
+}
+
+.no-results {
+    padding: 20px;
+    text-align: center;
+    color: var(--color-text-light);
+}
