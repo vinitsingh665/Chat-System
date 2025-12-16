@@ -11,6 +11,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const DATA_FILE = path.join(__dirname, 'chat-data.json');
 
+// Cleanup Constants
+const PUBLIC_ROOM_TIMEOUT = 60 * 1000; // 1 minute
+const PRIVATE_ROOM_TIMEOUT = 60 * 60 * 1000; // 1 hour
+const MESSAGE_RETENTION_LIMIT = 24 * 60 * 60 * 1000; // 24 hour
+
 // Middleware
 app.use(cors({
   origin: "*"
@@ -468,29 +473,43 @@ function getRoomList() {
 
 // Room Cleanup Logic
 // Room Cleanup Logic
-const PUBLIC_ROOM_TIMEOUT = 60 * 1000; // 1 minute
-const PRIVATE_ROOM_TIMEOUT = 60 * 60 * 1000; // 1 hour
-const MESSAGE_RETENTION_LIMIT = 24 * 60 * 60 * 1000; // 24 hours
+// Room Cleanup Logic
 
 function cleanupGlobalChatMessages() {
-  const globalChat = rooms['Global Chat'];
-  if (!globalChat || !globalChat.messages) return;
+  try {
+    const globalChat = rooms['Global Chat'];
+    if (!globalChat || !globalChat.messages) return;
 
-  const now = Date.now();
-  const initialCount = globalChat.messages.length;
+    const now = Date.now();
+    const initialCount = globalChat.messages.length;
 
-  globalChat.messages = globalChat.messages.filter(msg => {
-    // If msg.timestamp is undefined, keep it (safe fallback). 
-    // Otherwise, check if it's older than 24h.
-    if (!msg.timestamp) return true;
-    const msgTime = new Date(msg.timestamp).getTime();
-    return (now - msgTime) < MESSAGE_RETENTION_LIMIT;
-  });
+    if (!Array.isArray(globalChat.messages)) {
+      console.error(`[Server] Global Chat messages is not an array (Type: ${typeof globalChat.messages}). Resetting store.`);
+      globalChat.messages = [];
+      return;
+    }
 
-  const finalCount = globalChat.messages.length;
-  if (finalCount < initialCount) {
-    console.log(`[Server] Cleaned up ${initialCount - finalCount} old messages from Global Chat.`);
-    saveData();
+    globalChat.messages = globalChat.messages.filter(msg => {
+      // If msg.timestamp is undefined, keep it (safe fallback). 
+      // Otherwise, check if it's older than 24h.
+      if (!msg || !msg.timestamp) return true;
+      const msgTime = new Date(msg.timestamp).getTime();
+      if (isNaN(msgTime)) return true;
+      return (now - msgTime) < MESSAGE_RETENTION_LIMIT;
+    });
+
+    const finalCount = globalChat.messages.length;
+    if (finalCount < initialCount) {
+      console.log(`[Server] Cleaned up ${initialCount - finalCount} old messages from Global Chat.`);
+      saveData();
+    }
+  } catch (error) {
+    console.error('[Server] Error during global chat cleanup:', error);
+    // Recover by resetting if possible
+    if (rooms['Global Chat']) {
+      rooms['Global Chat'].messages = [];
+      console.log('[Server] Reset Global Chat messages due to corruption.');
+    }
   }
 }
 
