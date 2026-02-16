@@ -1,0 +1,110 @@
+/* ============================================
+   Voice Control — Premium
+   ============================================ */
+
+.voice-control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.join-voice-btn {
+  background: var(--color-input-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  padding: 0.5rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.88rem;
+  transition: all var(--transition-base);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+.join-voice-btn:hover {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.voice-active-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.voice-status {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  align-items: center;
+  color: var(--color-text-secondary);
+}
+
+.voice-actions {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: space-between;
+}
+
+.mute-btn, .leave-voice-btn {
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all var(--transition-base);
+}
+
+.mute-btn {
+  background: var(--color-input-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+
+.mute-btn:hover {
+  background: var(--color-surface-hover);
+}
+
+.mute-btn.muted {
+  background: rgba(239, 68, 68, 0.08);
+  color: var(--color-danger);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.leave-voice-btn {
+  background: rgba(239, 68, 68, 0.08);
+  color: var(--color-danger);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.leave-voice-btn:hover {
+  background: rgba(239, 68, 68, 0.15);
+}
+
+.voice-users-list {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .voice-count {
+    display: none;
+  }
+  .join-voice-btn span {
+    display: none;
+  }
+  .voice-actions {
+    flex-direction: column;
+  }
+}

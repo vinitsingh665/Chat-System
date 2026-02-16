@@ -1,0 +1,522 @@
+/* ============================================
+   PREMIUM DESIGN SYSTEM — ChatFlow
+   ============================================ */
+
+:root {
+  /* ── Primary Palette (Indigo/Violet) ── */
+  --color-primary: #4F46E5;
+  --color-primary-light: #6366F1;
+  --color-primary-dark: #4338CA;
+  --color-primary-soft: rgba(79, 70, 229, 0.08);
+  --color-primary-glow: rgba(99, 102, 241, 0.25);
+
+  /* ── Gradient Accents ── */
+  --gradient-primary: linear-gradient(135deg, #4F46E5, #7C3AED);
+  --gradient-sidebar: linear-gradient(180deg, #312E81, #4338CA);
+  --gradient-header: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%);
+  --gradient-send-btn: linear-gradient(135deg, #4F46E5, #7C3AED);
+  --gradient-login: linear-gradient(135deg, #312E81 0%, #4F46E5 50%, #7C3AED 100%);
+
+  /* ── Surfaces ── */
+  --color-bg: #F8F9FC;
+  --color-surface: #FFFFFF;
+  --color-surface-hover: #F1F3F9;
+  --color-surface-active: #EEF0F8;
+  --color-input-bg: #F1F3F9;
+
+  /* ── Text ── */
+  --color-text: #1A1D2E;
+  --color-text-secondary: #6B7094;
+  --color-text-muted: #9CA0B8;
+  --color-text-on-primary: #FFFFFF;
+
+  /* ── Borders & Dividers ── */
+  --color-border: #E4E7F1;
+  --color-border-light: #EDEDF5;
+  --color-divider: rgba(0, 0, 0, 0.04);
+
+  /* ── Status ── */
+  --color-success: #10B981;
+  --color-danger: #EF4444;
+  --color-warning: #F59E0B;
+  --color-info: #3B82F6;
+
+  /* ── Message Bubbles ── */
+  --bg-message-own: var(--gradient-primary);
+  --bg-message-own-solid: #4F46E5;
+  --text-message-own: #FFFFFF;
+  --bg-message-other: #FFFFFF;
+  --text-message-other: #1A1D2E;
+
+  /* ── Shadows (Layered System) ── */
+  --shadow-xs: 0 1px 2px rgba(16, 24, 40, 0.04);
+  --shadow-sm: 0 1px 3px rgba(16, 24, 40, 0.06), 0 1px 2px rgba(16, 24, 40, 0.04);
+  --shadow-md: 0 4px 8px -2px rgba(16, 24, 40, 0.08), 0 2px 4px -2px rgba(16, 24, 40, 0.04);
+  --shadow-lg: 0 12px 24px -4px rgba(16, 24, 40, 0.1), 0 4px 8px -2px rgba(16, 24, 40, 0.04);
+  --shadow-xl: 0 24px 48px -12px rgba(16, 24, 40, 0.18);
+  --shadow-glow: 0 0 20px rgba(79, 70, 229, 0.15);
+  --shadow-glow-lg: 0 0 40px rgba(79, 70, 229, 0.2);
+
+  /* ── Spacing & Radius ── */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* ── Transitions ── */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── Font ── */
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  color-scheme: light;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+
+  /* ── Login Page Variables ── */
+  --login-overlay-bg: rgba(0, 0, 0, 0.6);
+  --login-card-bg: rgba(255, 255, 255, 0.95);
+  --login-border: 1px solid rgba(255, 255, 255, 0.2);
+  --login-text: #1A1D2E;
+  --login-input-bg: #F1F3F9;
+  --login-input-text: #1A1D2E;
+  --login-btn-bg: var(--gradient-primary);
+  --login-btn-text: #FFFFFF;
+  --login-btn-hover-bg: var(--gradient-primary);
+  --login-btn-hover-text: #FFFFFF;
+
+  /* ── Button Primary (solid fallback) ── */
+  --color-btn-primary: #4F46E5;
+
+  /* Legacy alias mappings for components using old var names */
+  --color-olive-dark: #4F46E5;
+  --color-olive-light: #6366F1;
+  --color-cream-bg: #F8F9FC;
+  --color-white: #FFFFFF;
+  --color-text-dark: #1A1D2E;
+  --color-text-light: #6B7094;
+  --color-accent-gold: #F59E0B;
+}
+
+/* ── Emerald Theme (Warm Green/Sage) ── */
+.theme-emerald {
+  --color-primary: #059669;
+  --color-primary-light: #34D399;
+  --color-primary-dark: #047857;
+  --color-primary-soft: rgba(5, 150, 105, 0.08);
+  --color-primary-glow: rgba(52, 211, 153, 0.25);
+  --gradient-primary: linear-gradient(135deg, #059669, #10B981);
+  --gradient-sidebar: linear-gradient(180deg, #064E3B, #047857);
+  --gradient-header: linear-gradient(135deg, #059669 0%, #34D399 100%);
+  --gradient-send-btn: linear-gradient(135deg, #059669, #10B981);
+  --gradient-login: linear-gradient(135deg, #064E3B 0%, #059669 50%, #10B981 100%);
+  --color-bg: #F0FDF4;
+  --color-surface: #FFFFFF;
+  --color-surface-hover: #ECFDF5;
+  --color-surface-active: #D1FAE5;
+  --color-input-bg: #F0FDF4;
+  --color-text: #1A2E1A;
+  --color-text-secondary: #4B7A56;
+  --color-text-muted: #86A892;
+  --color-border: #D1FAE5;
+  --color-border-light: #E6F7EC;
+  --bg-message-own: var(--gradient-primary);
+  --bg-message-own-solid: #059669;
+  --text-message-own: #FFFFFF;
+  --bg-message-other: #FFFFFF;
+  --text-message-other: #1A2E1A;
+  --shadow-glow: 0 0 20px rgba(5, 150, 105, 0.15);
+  --shadow-glow-lg: 0 0 40px rgba(5, 150, 105, 0.2);
+  background-color: #E8F8EE;
+  --login-overlay-bg: rgba(0, 0, 0, 0.6);
+  --login-card-bg: rgba(255, 255, 255, 0.95);
+  --login-border: 1px solid rgba(255, 255, 255, 0.2);
+  --login-text: #1A2E1A;
+  --login-input-bg: #F0FDF4;
+  --login-input-text: #1A2E1A;
+  --login-btn-bg: var(--gradient-primary);
+  --login-btn-text: #FFFFFF;
+  --color-btn-primary: #059669;
+  --color-olive-dark: #059669;
+  --color-olive-light: #34D399;
+}
+
+/* ── Dark Theme ── */
+.theme-dark {
+  --color-primary: #818CF8;
+  --color-primary-light: #A5B4FC;
+  --color-primary-dark: #6366F1;
+  --color-primary-soft: rgba(129, 140, 248, 0.1);
+  --color-primary-glow: rgba(129, 140, 248, 0.2);
+  --gradient-primary: linear-gradient(135deg, #6366F1, #8B5CF6);
+  --gradient-sidebar: linear-gradient(180deg, #1E1B4B, #312E81);
+  --gradient-header: linear-gradient(135deg, #4338CA 0%, #6366F1 100%);
+  --gradient-send-btn: linear-gradient(135deg, #6366F1, #8B5CF6);
+  --gradient-login: linear-gradient(135deg, #1E1B4B 0%, #312E81 50%, #4338CA 100%);
+
+  --color-bg: #0F0F1A;
+  --color-surface: #1A1A2E;
+  --color-surface-hover: #252540;
+  --color-surface-active: #2D2D4A;
+  --color-input-bg: #252540;
+
+  --color-text: #E8E8F0;
+  --color-text-secondary: #9CA0C0;
+  --color-text-muted: #6B6F8F;
+  --color-text-on-primary: #FFFFFF;
+
+  --color-border: #2D2D4A;
+  --color-border-light: #363660;
+  --color-divider: rgba(255, 255, 255, 0.06);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 4px 8px -2px rgba(0, 0, 0, 0.25), 0 2px 4px -2px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.3), 0 4px 8px -2px rgba(0, 0, 0, 0.15);
+
+  --bg-message-own: var(--gradient-primary);
+  --bg-message-own-solid: #6366F1;
+  --text-message-own: #FFFFFF;
+  --bg-message-other: #1A1A2E;
+  --text-message-other: #E8E8F0;
+
+  background-color: #0A0A14;
+
+  --login-overlay-bg: rgba(0, 0, 0, 0.75);
+  --login-card-bg: rgba(26, 26, 46, 0.95);
+  --login-border: 1px solid rgba(99, 102, 241, 0.2);
+  --login-text: #E8E8F0;
+  --login-input-bg: #252540;
+  --login-input-text: #E8E8F0;
+  --login-btn-bg: var(--gradient-primary);
+  --login-btn-text: #FFFFFF;
+  --login-btn-hover-bg: var(--gradient-primary);
+  --login-btn-hover-text: #FFFFFF;
+
+  /* Legacy aliases for dark */
+  --color-olive-dark: #818CF8;
+  --color-olive-light: #6366F1;
+  --color-cream-bg: #0F0F1A;
+  --color-white: #1A1A2E;
+  --color-text-dark: #E8E8F0;
+  --color-text-light: #9CA0C0;
+  --color-btn-primary: #6366F1;
+}
+
+/* ── Rose Theme (Soft Pink) ── */
+.theme-rose {
+  --color-primary: #E11D48;
+  --color-primary-light: #FB7185;
+  --color-primary-dark: #BE123C;
+  --color-primary-soft: rgba(225, 29, 72, 0.08);
+  --color-primary-glow: rgba(251, 113, 133, 0.25);
+  --gradient-primary: linear-gradient(135deg, #E11D48, #F43F5E);
+  --gradient-sidebar: linear-gradient(180deg, #881337, #BE123C);
+  --gradient-header: linear-gradient(135deg, #E11D48 0%, #FB7185 100%);
+  --gradient-send-btn: linear-gradient(135deg, #E11D48, #F43F5E);
+  --gradient-login: linear-gradient(135deg, #881337 0%, #E11D48 50%, #FB7185 100%);
+  --color-bg: #FFF1F2;
+  --color-surface: #FFFFFF;
+  --color-surface-hover: #FFE4E6;
+  --color-surface-active: #FECDD3;
+  --color-input-bg: #FFF1F2;
+  --color-text: #2E1A1E;
+  --color-text-secondary: #7A4B56;
+  --color-text-muted: #B08090;
+  --color-border: #FECDD3;
+  --color-border-light: #FFE4E6;
+  --bg-message-own: var(--gradient-primary);
+  --bg-message-own-solid: #E11D48;
+  --text-message-own: #FFFFFF;
+  --bg-message-other: #FFFFFF;
+  --text-message-other: #2E1A1E;
+  --shadow-glow: 0 0 20px rgba(225, 29, 72, 0.15);
+  --shadow-glow-lg: 0 0 40px rgba(225, 29, 72, 0.2);
+  background-color: #FCE7E9;
+  --login-overlay-bg: rgba(0, 0, 0, 0.6);
+  --login-card-bg: rgba(255, 255, 255, 0.95);
+  --login-border: 1px solid rgba(255, 255, 255, 0.2);
+  --login-text: #2E1A1E;
+  --login-input-bg: #FFF1F2;
+  --login-input-text: #2E1A1E;
+  --login-btn-bg: var(--gradient-primary);
+  --login-btn-text: #FFFFFF;
+  --color-btn-primary: #E11D48;
+}
+
+/* ── Amber Theme (Warm Gold) ── */
+.theme-amber {
+  --color-primary: #D97706;
+  --color-primary-light: #FBBF24;
+  --color-primary-dark: #B45309;
+  --color-primary-soft: rgba(217, 119, 6, 0.08);
+  --color-primary-glow: rgba(251, 191, 36, 0.25);
+  --gradient-primary: linear-gradient(135deg, #D97706, #F59E0B);
+  --gradient-sidebar: linear-gradient(180deg, #78350F, #B45309);
+  --gradient-header: linear-gradient(135deg, #D97706 0%, #FBBF24 100%);
+  --gradient-send-btn: linear-gradient(135deg, #D97706, #F59E0B);
+  --gradient-login: linear-gradient(135deg, #78350F 0%, #D97706 50%, #FBBF24 100%);
+  --color-bg: #FFFBEB;
+  --color-surface: #FFFFFF;
+  --color-surface-hover: #FEF3C7;
+  --color-surface-active: #FDE68A;
+  --color-input-bg: #FFFBEB;
+  --color-text: #2E2A1A;
+  --color-text-secondary: #7A6B4B;
+  --color-text-muted: #B0A080;
+  --color-border: #FDE68A;
+  --color-border-light: #FEF3C7;
+  --bg-message-own: var(--gradient-primary);
+  --bg-message-own-solid: #D97706;
+  --text-message-own: #FFFFFF;
+  --bg-message-other: #FFFFFF;
+  --text-message-other: #2E2A1A;
+  --shadow-glow: 0 0 20px rgba(217, 119, 6, 0.15);
+  --shadow-glow-lg: 0 0 40px rgba(217, 119, 6, 0.2);
+  background-color: #FDF5E0;
+  --login-overlay-bg: rgba(0, 0, 0, 0.6);
+  --login-card-bg: rgba(255, 255, 255, 0.95);
+  --login-border: 1px solid rgba(255, 255, 255, 0.2);
+  --login-text: #2E2A1A;
+  --login-input-bg: #FFFBEB;
+  --login-input-text: #2E2A1A;
+  --login-btn-bg: var(--gradient-primary);
+  --login-btn-text: #FFFFFF;
+  --color-btn-primary: #D97706;
+}
+
+/* ── Cyan Theme (Cool Teal) ── */
+.theme-cyan {
+  --color-primary: #0891B2;
+  --color-primary-light: #22D3EE;
+  --color-primary-dark: #0E7490;
+  --color-primary-soft: rgba(8, 145, 178, 0.08);
+  --color-primary-glow: rgba(34, 211, 238, 0.25);
+  --gradient-primary: linear-gradient(135deg, #0891B2, #06B6D4);
+  --gradient-sidebar: linear-gradient(180deg, #164E63, #0E7490);
+  --gradient-header: linear-gradient(135deg, #0891B2 0%, #22D3EE 100%);
+  --gradient-send-btn: linear-gradient(135deg, #0891B2, #06B6D4);
+  --gradient-login: linear-gradient(135deg, #164E63 0%, #0891B2 50%, #22D3EE 100%);
+  --color-bg: #ECFEFF;
+  --color-surface: #FFFFFF;
+  --color-surface-hover: #CFFAFE;
+  --color-surface-active: #A5F3FC;
+  --color-input-bg: #ECFEFF;
+  --color-text: #1A2E2E;
+  --color-text-secondary: #4B7A7A;
+  --color-text-muted: #80B0B0;
+  --color-border: #A5F3FC;
+  --color-border-light: #CFFAFE;
+  --bg-message-own: var(--gradient-primary);
+  --bg-message-own-solid: #0891B2;
+  --text-message-own: #FFFFFF;
+  --bg-message-other: #FFFFFF;
+  --text-message-other: #1A2E2E;
+  --shadow-glow: 0 0 20px rgba(8, 145, 178, 0.15);
+  --shadow-glow-lg: 0 0 40px rgba(8, 145, 178, 0.2);
+  background-color: #E0F7FA;
+  --login-overlay-bg: rgba(0, 0, 0, 0.6);
+  --login-card-bg: rgba(255, 255, 255, 0.95);
+  --login-border: 1px solid rgba(255, 255, 255, 0.2);
+  --login-text: #1A2E2E;
+  --login-input-bg: #ECFEFF;
+  --login-input-text: #1A2E2E;
+  --login-btn-bg: var(--gradient-primary);
+  --login-btn-text: #FFFFFF;
+  --color-btn-primary: #0891B2;
+}
+
+/* ── Sunset Theme (Dark Warm) ── */
+.theme-sunset {
+  --color-primary: #F97316;
+  --color-primary-light: #FB923C;
+  --color-primary-dark: #EA580C;
+  --color-primary-soft: rgba(249, 115, 22, 0.12);
+  --color-primary-glow: rgba(251, 146, 60, 0.25);
+  --gradient-primary: linear-gradient(135deg, #EA580C, #F97316);
+  --gradient-sidebar: linear-gradient(180deg, #1C1412, #2D1F1A);
+  --gradient-header: linear-gradient(135deg, #EA580C 0%, #F97316 100%);
+  --gradient-send-btn: linear-gradient(135deg, #EA580C, #F97316);
+  --gradient-login: linear-gradient(135deg, #1C1412 0%, #EA580C 50%, #F97316 100%);
+  --color-bg: #1A1210;
+  --color-surface: #2D1F1A;
+  --color-surface-hover: #3D2A22;
+  --color-surface-active: #4D352A;
+  --color-input-bg: #2D1F1A;
+  --color-text: #F5E6DC;
+  --color-text-secondary: #C0A090;
+  --color-text-muted: #8A7060;
+  --color-text-on-primary: #FFFFFF;
+  --color-border: #3D2A22;
+  --color-border-light: #4D352A;
+  --color-divider: rgba(255, 255, 255, 0.06);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 20px rgba(249, 115, 22, 0.2);
+  --shadow-glow-lg: 0 0 40px rgba(249, 115, 22, 0.25);
+  --bg-message-own: var(--gradient-primary);
+  --bg-message-own-solid: #EA580C;
+  --text-message-own: #FFFFFF;
+  --bg-message-other: #2D1F1A;
+  --text-message-other: #F5E6DC;
+  background-color: #140E0C;
+  --login-overlay-bg: rgba(0, 0, 0, 0.8);
+  --login-card-bg: rgba(45, 31, 26, 0.95);
+  --login-border: 1px solid rgba(249, 115, 22, 0.2);
+  --login-text: #F5E6DC;
+  --login-input-bg: #3D2A22;
+  --login-input-text: #F5E6DC;
+  --login-btn-bg: var(--gradient-primary);
+  --login-btn-text: #FFFFFF;
+  --color-btn-primary: #F97316;
+}
+
+/* ── Midnight Theme (Deep Navy) ── */
+.theme-midnight {
+  --color-primary: #3B82F6;
+  --color-primary-light: #60A5FA;
+  --color-primary-dark: #2563EB;
+  --color-primary-soft: rgba(59, 130, 246, 0.1);
+  --color-primary-glow: rgba(96, 165, 250, 0.2);
+  --gradient-primary: linear-gradient(135deg, #2563EB, #3B82F6);
+  --gradient-sidebar: linear-gradient(180deg, #0C1629, #111D38);
+  --gradient-header: linear-gradient(135deg, #2563EB 0%, #60A5FA 100%);
+  --gradient-send-btn: linear-gradient(135deg, #2563EB, #3B82F6);
+  --gradient-login: linear-gradient(135deg, #0C1629 0%, #2563EB 50%, #60A5FA 100%);
+  --color-bg: #0F172A;
+  --color-surface: #1E293B;
+  --color-surface-hover: #273548;
+  --color-surface-active: #334155;
+  --color-input-bg: #1E293B;
+  --color-text: #E2E8F0;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted: #64748B;
+  --color-text-on-primary: #FFFFFF;
+  --color-border: #334155;
+  --color-border-light: #3B4A60;
+  --color-divider: rgba(255, 255, 255, 0.06);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.2);
+  --shadow-glow-lg: 0 0 40px rgba(59, 130, 246, 0.25);
+  --bg-message-own: var(--gradient-primary);
+  --bg-message-own-solid: #2563EB;
+  --text-message-own: #FFFFFF;
+  --bg-message-other: #1E293B;
+  --text-message-other: #E2E8F0;
+  background-color: #0B1120;
+  --login-overlay-bg: rgba(0, 0, 0, 0.8);
+  --login-card-bg: rgba(30, 41, 59, 0.95);
+  --login-border: 1px solid rgba(59, 130, 246, 0.2);
+  --login-text: #E2E8F0;
+  --login-input-bg: #273548;
+  --login-input-text: #E2E8F0;
+  --login-btn-bg: var(--gradient-primary);
+  --login-btn-text: #FFFFFF;
+  --color-btn-primary: #3B82F6;
+}
+
+/* ── Font Size Classes ── */
+.font-small { font-size: 14px; }
+.font-medium { font-size: 16px; }
+.font-large { font-size: 18px; }
+
+/* ── Base Resets ── */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+#root {
+  width: 100%;
+}
+
+.app-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+}
+
+/* ── Premium Scrollbar ── */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* ── Typography Reset ── */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+h1 { font-weight: 700; letter-spacing: -0.02em; }
+h2 { font-weight: 700; letter-spacing: -0.015em; }
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+/* ── Utility Animations ── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 var(--color-primary-glow); }
+  50% { box-shadow: 0 0 0 8px transparent; }
+}

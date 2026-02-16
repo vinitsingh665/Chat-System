@@ -1,0 +1,249 @@
+/* ============================================
+   RoomList — Premium Contact/Room Panel
+   ============================================ */
+
+.middle-panel {
+  width: 320px;
+  min-width: 320px;
+  max-width: 320px;
+  flex: 0 0 320px;
+  background-color: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-right: 1px solid var(--color-border-light);
+  position: relative;
+}
+
+/* ── Search ── */
+.search-container {
+  margin-bottom: 20px;
+  margin-top: 10px; /* Added breathing room */
+}
+
+.sidebar-search-bar {
+  display: flex;
+  align-items: center;
+  background-color: var(--color-surface);
+  height: 44px; /* Fixed premium height */
+  padding: 0 14px; /* Padding only horizontal, let flex center vertical */
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xs);
+  border: 1px solid var(--color-border-light);
+  transition: all var(--transition-base);
+}
+
+.sidebar-search-bar:focus-within {
+  border-color: var(--color-primary-light);
+  box-shadow: var(--shadow-sm), 0 0 0 3px var(--color-primary-glow);
+}
+
+.sidebar-search-icon {
+  margin-right: 12px;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sidebar-search-bar input {
+  border: none;
+  outline: none;
+  background: transparent;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--color-text);
+  font-weight: 400;
+  line-height: normal; /* Fix offset */
+}
+
+.sidebar-search-bar input::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* ── Section Lists ── */
+.lists-container {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-right: 4px;
+}
+
+.section-header h3 {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-bottom: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.item-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ── List Items ── */
+.list-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background-color: transparent;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+  border: 1px solid transparent;
+}
+
+.list-item:hover {
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  border-color: var(--color-border-light);
+}
+
+.list-item.active {
+  background-color: var(--color-primary-soft);
+  border-color: rgba(79, 70, 229, 0.15);
+  border-left: 3px solid var(--color-primary);
+}
+
+.list-item.active .item-name {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* ── Avatars ── */
+.item-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  margin-right: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.create-avatar {
+  background: var(--gradient-primary);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Item Info ── */
+.item-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  overflow: hidden;
+}
+
+.item-name {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.item-subtext {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+
+/* ── Online Indicator ── */
+.online-indicator {
+  width: 10px;
+  height: 10px;
+  background-color: var(--color-success);
+  border-radius: 50%;
+  border: 2px solid var(--color-surface);
+  position: absolute;
+  right: 12px;
+  bottom: 14px;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
+}
+
+.online-indicator.dnd {
+  background-color: var(--color-warning) !important;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
+}
+
+/* ── Unread Badge ── */
+.unread-badge {
+  font-size: 0.7rem;
+  color: var(--color-danger);
+  font-weight: 600;
+  margin-top: 2px;
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Pin Actions ── */
+.pin-action {
+  display: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  font-size: 0.9rem;
+  margin-left: 8px;
+  color: var(--color-text-muted);
+  transition: all var(--transition-fast);
+}
+
+.pin-action:hover {
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.list-item:hover .pin-action {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .pin-action {
+    display: block;
+    opacity: 0.6;
+  }
+}
+
+.pinned-icon-small {
+  font-size: 0.65rem;
+  color: var(--color-primary);
+}

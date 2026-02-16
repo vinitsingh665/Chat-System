@@ -1,0 +1,168 @@
+/* ============================================
+   Messages — Premium Bubble Design
+   ============================================ */
+
+.message-container {
+  display: flex;
+  margin-bottom: 4px;
+  width: 100%;
+  animation: messageIn 0.25s ease-out;
+}
+
+@keyframes messageIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.own-message {
+  justify-content: flex-end;
+}
+
+.other-message {
+  justify-content: flex-start;
+}
+
+.message-image {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.message-audio-container {
+  margin-top: 4px;
+  min-width: 200px;
+}
+
+.message-audio {
+  width: 100%;
+  height: 36px;
+  border-radius: 20px;
+}
+
+/* ── Message Bubble ── */
+.message-bubble {
+  max-width: 65%;
+  padding: 10px 16px;
+  border-radius: 18px;
+  position: relative;
+  word-wrap: break-word;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  transition: box-shadow var(--transition-fast);
+}
+
+.message-bubble:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── Own Message ── */
+.own-message .message-bubble {
+  background: var(--bg-message-own);
+  background-color: var(--bg-message-own-solid); /* fallback for gradient */
+  color: var(--text-message-own);
+  border-bottom-right-radius: 6px;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.15);
+}
+
+.own-message .message-bubble:hover {
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+}
+
+/* ── Other Message ── */
+.other-message .message-bubble {
+  background-color: var(--bg-message-other);
+  color: var(--text-message-other, var(--color-text));
+  border-bottom-left-radius: 6px;
+  border: 1px solid var(--color-border-light);
+}
+
+/* ── Sequence Messages ── */
+.sequence-message {
+  margin-top: -2px;
+  margin-bottom: 2px;
+}
+
+.sequence-message .message-bubble {
+  border-top-right-radius: 6px;
+}
+
+/* ── Sender Name ── */
+.message-sender {
+  font-size: 0.72rem;
+  font-weight: 600;
+  margin-bottom: 3px;
+  display: block;
+  letter-spacing: 0.02em;
+}
+
+.own-message .message-sender {
+  display: none;
+}
+
+.other-message .message-sender {
+  color: var(--color-primary);
+}
+
+/* ── Message Text ── */
+.message-text {
+  margin: 0;
+  line-height: 1.55;
+}
+
+/* ── Timestamp ── */
+.message-timestamp {
+  font-size: 0.65rem;
+  margin-top: 4px;
+  text-align: right;
+  font-weight: 400;
+}
+
+.own-message .message-timestamp {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.other-message .message-timestamp {
+  color: var(--color-text-muted);
+}
+
+/* ── File/Image Content ── */
+.message-image-container img {
+  border-radius: var(--radius-md);
+  max-width: 100%;
+  box-shadow: var(--shadow-xs);
+}
+
+.message-file-link a {
+  color: inherit;
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.3);
+}
+
+.other-message .message-file-link a {
+  text-decoration-color: var(--color-primary-glow);
+  color: var(--color-primary);
+}
+
+/* ── System Message ── */
+.system-message-container {
+  justify-content: center;
+}
+
+.system-message-text {
+  background-color: var(--color-surface-hover);
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  border: 1px solid var(--color-border-light);
+}
