@@ -173,8 +173,7 @@ const Chat = ({ username, onLogout, settings, onSettingsChange, onUsernameChange
   }, [closingTimer]);
 
   useEffect(() => {
-    const isNgrok = window.location.hostname.includes('ngrok') || window.location.hostname.includes('loca.lt') || window.location.hostname !== 'localhost';
-    const socketUrl = import.meta.env.VITE_SERVER_URL || (isNgrok ? '/' : 'http://localhost:3000');
+    const socketUrl = import.meta.env.VITE_SERVER_URL || (window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://chat-system-6vub.onrender.com');
 
     console.log(`Connecting to Socket.IO at: ${socketUrl}`);
 

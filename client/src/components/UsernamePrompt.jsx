@@ -13,8 +13,7 @@ const UsernamePrompt = ({ onJoin }) => {
       setLoading(true);
       setError('');
       
-      const isNgrok = window.location.hostname.includes('ngrok') || window.location.hostname.includes('loca.lt') || window.location.hostname !== 'localhost';
-      const baseUrl = isNgrok ? '' : 'http://localhost:3000';
+      const baseUrl = import.meta.env.VITE_SERVER_URL || (window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://chat-system-6vub.onrender.com');
       
       try {
         const res = await fetch(`${baseUrl}/check-username?username=${encodeURIComponent(username.trim())}`);
