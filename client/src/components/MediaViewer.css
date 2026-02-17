@@ -1,0 +1,99 @@
+/* ============================================
+   Media Viewer — Fullscreen Lightbox
+   ============================================ */
+
+.media-viewer-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: mediaViewerFadeIn 0.2s ease-out;
+}
+
+@keyframes mediaViewerFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.media-viewer-content {
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-lg, 12px);
+  overflow: hidden;
+  background: rgba(20, 20, 30, 0.9);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.media-viewer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.media-viewer-title {
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
+}
+
+.media-viewer-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.media-viewer-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.media-viewer-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.media-viewer-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.media-viewer-image {
+  max-width: 85vw;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 8px;
+  animation: mediaViewerZoomIn 0.3s ease-out;
+}
+
+@keyframes mediaViewerZoomIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.media-viewer-audio,
+.media-viewer-video {
+  max-width: 80vw;
+  border-radius: 8px;
+}

@@ -51,6 +51,9 @@ let rooms = {
 };
 const roomTimers = {};
 
+// Active file uploads for chunked transfer
+const activeUploads = new Map(); // uploadId -> { chunks: [], metadata, timer }
+
 // User mapping for O(1) lookups (Performance Improvement)
 const userSocketMap = new Map(); // username -> socketId
 
@@ -346,6 +349,143 @@ io.on('connection', (socket) => {
       }
     } catch (err) {
       handleSocketError(socket, err, 'chat-message');
+    }
+  });
+
+  // --- Chunked File Upload Handlers ---
+
+  socket.on('file-upload-start', ({ uploadId, roomName, fileName, fileType, fileSize, totalChunks }) => {
+    try {
+      if (!uploadId || !roomName || !fileName || !fileSize || !totalChunks) {
+        socket.emit('error', 'Invalid file upload parameters.');
+        return;
+      }
+      // Enforce max file size (10MB)
+      if (fileSize > 10 * 1024 * 1024) {
+        socket.emit('error', 'File too large. Maximum size is 10MB.');
+        return;
+      }
+      // Store upload metadata
+      activeUploads.set(uploadId, {
+        chunks: [],
+        metadata: { roomName, fileName, fileType, fileSize, totalChunks, username: socket.data.username },
+        receivedChunks: 0,
+        // Auto-cleanup stale uploads after 60s
+        timer: setTimeout(() => {
+          activeUploads.delete(uploadId);
+          logger.warn(`Stale upload cleaned up: ${uploadId}`);
+        }, 60000)
+      });
+      // Notify room that upload started
+      socket.to(roomName).emit('file-upload-progress', {
+        uploadId,
+        roomName,
+        fileName,
+        fileType,
+        fileSize,
+        username: socket.data.username,
+        loaded: 0,
+        total: fileSize,
+        status: 'uploading'
+      });
+      logger.debug(`File upload started: ${fileName} (${fileSize} bytes) by ${socket.data.username}`);
+    } catch (err) {
+      handleSocketError(socket, err, 'file-upload-start');
+    }
+  });
+
+  socket.on('file-upload-chunk', ({ uploadId, chunkIndex, chunk, loaded }) => {
+    try {
+      const upload = activeUploads.get(uploadId);
+      if (!upload) {
+        socket.emit('error', 'Upload session not found or expired.');
+        return;
+      }
+      upload.chunks[chunkIndex] = chunk;
+      upload.receivedChunks++;
+      // Broadcast progress to room
+      socket.to(upload.metadata.roomName).emit('file-upload-progress', {
+        uploadId,
+        roomName: upload.metadata.roomName,
+        fileName: upload.metadata.fileName,
+        fileType: upload.metadata.fileType,
+        fileSize: upload.metadata.fileSize,
+        username: upload.metadata.username,
+        loaded,
+        total: upload.metadata.fileSize,
+        status: 'uploading'
+      });
+    } catch (err) {
+      handleSocketError(socket, err, 'file-upload-chunk');
+    }
+  });
+
+  socket.on('file-upload-end', ({ uploadId, caption }) => {
+    try {
+      const upload = activeUploads.get(uploadId);
+      if (!upload) {
+        socket.emit('error', 'Upload session not found or expired.');
+        return;
+      }
+      clearTimeout(upload.timer);
+      const { metadata } = upload;
+      // Reassemble the base64 content
+      const fullContent = upload.chunks.join('');
+      // Build the chat message
+      const fullMsg = {
+        roomName: metadata.roomName,
+        username: metadata.username,
+        type: 'file',
+        fileType: metadata.fileType,
+        fileName: metadata.fileName,
+        fileSize: metadata.fileSize,
+        text: caption || metadata.fileName,
+        content: fullContent,
+        timestamp: new Date().toISOString()
+      };
+      // Store message
+      if (rooms[metadata.roomName]) {
+        rooms[metadata.roomName].messages.push(fullMsg);
+        saveDataDebounced();
+      }
+      // Broadcast to room
+      io.to(metadata.roomName).emit('chat-message', fullMsg);
+
+      // For DMs, ensure recipient gets it even if not in room
+      if ((rooms[metadata.roomName] && rooms[metadata.roomName].isDirectMessage) || metadata.roomName.startsWith('DM:')) {
+        let participants = rooms[metadata.roomName]?.participants;
+        if (!participants && metadata.roomName.startsWith('DM:')) {
+          participants = metadata.roomName.replace('DM:', '').split(':');
+        }
+        const recipientName = (participants || []).find(p => p !== metadata.username);
+        if (recipientName) {
+          const recipientSocketId = userSocketMap.get(recipientName);
+          if (recipientSocketId) {
+            const recipientSocket = io.sockets.sockets.get(recipientSocketId);
+            if (recipientSocket && !recipientSocket.rooms.has(metadata.roomName)) {
+              recipientSocket.emit('chat-message', fullMsg);
+            }
+          }
+        }
+      }
+
+      // Notify receivers upload is complete
+      socket.to(metadata.roomName).emit('file-upload-progress', {
+        uploadId,
+        roomName: metadata.roomName,
+        fileName: metadata.fileName,
+        fileType: metadata.fileType,
+        fileSize: metadata.fileSize,
+        username: metadata.username,
+        loaded: metadata.fileSize,
+        total: metadata.fileSize,
+        status: 'complete'
+      });
+      // Cleanup
+      activeUploads.delete(uploadId);
+      logger.debug(`File upload complete: ${metadata.fileName} by ${metadata.username}`);
+    } catch (err) {
+      handleSocketError(socket, err, 'file-upload-end');
     }
   });
 

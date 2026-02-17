@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './CreateRoomModal.css'; // Re-using the same styles for consistency
 
-const JoinRoomModal = ({ roomName, onClose, onJoin }) => {
+const JoinRoomModal = ({ roomName, onClose, onJoin, error }) => {
   const [password, setPassword] = useState('');
 
   const handleSubmit = (e) => {
@@ -20,10 +20,12 @@ const JoinRoomModal = ({ roomName, onClose, onJoin }) => {
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => { setPassword(e.target.value); }}
               placeholder="Server Password"
               autoFocus
+              className={error ? 'input-error' : ''}
             />
+            {error && <span className="field-error">{error}</span>}
           </div>
           <div className="modal-actions">
             <button type="button" onClick={onClose} className="btn-secondary">Cancel</button>
@@ -39,6 +41,7 @@ JoinRoomModal.propTypes = {
   roomName: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
   onJoin: PropTypes.func.isRequired,
+  error: PropTypes.string,
 };
 
 export default JoinRoomModal;

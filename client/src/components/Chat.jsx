@@ -12,6 +12,7 @@ import SettingsModal from './SettingsModal';
 import InviteModal from './InviteModal';
 import TypingIndicator from './TypingIndicator';
 import SearchBar from './SearchBar';
+import MediaViewer from './MediaViewer';
 import './Chat.css';
 
 // Helper: Compress Image
@@ -81,6 +82,7 @@ const Chat = ({ username, onLogout, settings, onSettingsChange, onUsernameChange
   // Join Modal State
   const [showJoinModal, setShowJoinModal] = useState(false);
   const [targetRoom, setTargetRoom] = useState(null);
+  const [joinError, setJoinError] = useState('');
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
 
@@ -102,6 +104,13 @@ const Chat = ({ username, onLogout, settings, onSettingsChange, onUsernameChange
   const [imagePreview, setImagePreview] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [imageCaption, setImageCaption] = useState('');
+
+  // Upload progress tracking
+  const [uploadProgress, setUploadProgress] = useState(null); // { fileName, loaded, total, status }
+  // Incoming upload progress from other users
+  const [incomingUploads, setIncomingUploads] = useState({}); // uploadId -> { fileName, ... }
+  // Media viewer state
+  const [mediaViewerData, setMediaViewerData] = useState(null); // { src, fileName, fileType }
 
   // Settings State moved to App.jsx
   const [showSettingsModal, setShowSettingsModal] = useState(false);
@@ -248,6 +257,19 @@ const Chat = ({ username, onLogout, settings, onSettingsChange, onUsernameChange
          return; // Suppress alert
       }
 
+      // Handle password errors inline in the JoinRoomModal
+      if (err === 'Incorrect password' || err === 'Password required') {
+         setJoinError(err === 'Incorrect password' ? 'Incorrect password. Please try again.' : 'Password is required to join this room.');
+         // If this was from an invite attempt, open the modal
+         if (attemptingJoinRef.current) {
+           const roomName = attemptingJoinRef.current;
+           attemptingJoinRef.current = null;
+           setTargetRoom({ name: roomName, isPrivate: true });
+           setShowJoinModal(true);
+         }
+         return; // Don't show alert
+      }
+
       alert(`Error: ${err}`);
       if (err === 'Existing user try other username') {
          onLogout(); // Reset app state to show username prompt again
@@ -294,6 +316,24 @@ const Chat = ({ username, onLogout, settings, onSettingsChange, onUsernameChange
         ...prev,
         [messageId]: updatedReactions
       }));
+    });
+
+    // File upload progress from other users
+    socketRef.current.on('file-upload-progress', (data) => {
+      if (data.username !== username && data.roomName === currentRoomRef.current) {
+        if (data.status === 'complete') {
+          setIncomingUploads(prev => {
+            const next = { ...prev };
+            delete next[data.uploadId];
+            return next;
+          });
+        } else {
+          setIncomingUploads(prev => ({
+            ...prev,
+            [data.uploadId]: data
+          }));
+        }
+      }
     });
 
     socketRef.current.on('chat-message', (msg) => {
@@ -395,40 +435,78 @@ const Chat = ({ username, onLogout, settings, onSettingsChange, onUsernameChange
              console.error("Image compression error", err);
           }
       } else if (socketRef.current) {
-          // Auto-send non-image files
-          const reader = new FileReader();
-          reader.onload = (evt) => {
-            const msgData = {
-              roomName: currentRoom,
-              username,
-              type: 'file',
-              fileType: file.type,
-              fileName: file.name,
-              text: file.name, // Required for server validation
-              content: evt.target.result, 
-              timestamp: new Date().toISOString()
-            };
-            socketRef.current.emit('chat-message', msgData);
-          };
-          reader.readAsDataURL(file);
+          // Auto-send non-image files with progress
+          sendFileWithProgress(file, file.name);
       }
     }
     e.target.value = null;
   };
 
+  // Chunked file upload with progress
+  const sendFileWithProgress = (fileOrBlob, fileName, caption, fileType) => {
+    if (!socketRef.current || !currentRoom) return;
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const base64Data = evt.target.result;
+      const actualFileType = fileType || fileOrBlob.type;
+      const fileSize = fileOrBlob.size;
+      const CHUNK_SIZE = 65536; // 64KB chunks
+      const totalChunks = Math.ceil(base64Data.length / CHUNK_SIZE);
+      const uploadId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+      // Notify server upload is starting
+      socketRef.current.emit('file-upload-start', {
+        uploadId,
+        roomName: currentRoom,
+        fileName,
+        fileType: actualFileType,
+        fileSize,
+        totalChunks
+      });
+
+      setUploadProgress({ fileName, loaded: 0, total: fileSize, status: 'uploading' });
+
+      let chunkIndex = 0;
+      const sendNextChunk = () => {
+        if (chunkIndex < totalChunks) {
+          const start = chunkIndex * CHUNK_SIZE;
+          const chunk = base64Data.slice(start, start + CHUNK_SIZE);
+          const loaded = Math.min((chunkIndex + 1) * CHUNK_SIZE, base64Data.length);
+          const loadedBytes = Math.round((loaded / base64Data.length) * fileSize);
+
+          socketRef.current.emit('file-upload-chunk', {
+            uploadId,
+            chunkIndex,
+            chunk,
+            loaded: loadedBytes
+          });
+
+          setUploadProgress(prev => ({
+            ...prev,
+            loaded: loadedBytes
+          }));
+
+          chunkIndex++;
+          // Use setTimeout to avoid blocking UI
+          setTimeout(sendNextChunk, 10);
+        } else {
+          // All chunks sent
+          socketRef.current.emit('file-upload-end', {
+            uploadId,
+            caption: caption || fileName
+          });
+          setUploadProgress({ fileName, loaded: fileSize, total: fileSize, status: 'complete' });
+          setTimeout(() => setUploadProgress(null), 1500);
+        }
+      };
+      sendNextChunk();
+    };
+    reader.readAsDataURL(fileOrBlob);
+  };
+
   const handleSendImage = () => {
     if (selectedFile && imagePreview && socketRef.current) {
-        const msgData = {
-            roomName: currentRoom,
-            username,
-            type: 'file',
-            fileType: selectedFile.type,
-            fileName: selectedFile.name,
-            text: imageCaption || selectedFile.name,
-            content: imagePreview, // Use the compressed preview as content
-            timestamp: new Date().toISOString()
-        };
-        socketRef.current.emit('chat-message', msgData);
+        sendFileWithProgress(selectedFile, selectedFile.name, imageCaption || selectedFile.name);
         handleCancelImage();
     }
   };
@@ -487,23 +565,8 @@ const Chat = ({ username, onLogout, settings, onSettingsChange, onUsernameChange
 
   const handleSendAudio = () => {
     if (audioBlob && socketRef.current) {
-        const reader = new FileReader();
-        reader.readAsDataURL(audioBlob);
-        reader.onloadend = () => {
-          const base64Audio = reader.result;
-          const msgData = {
-            roomName: currentRoom,
-            username,
-            type: 'file',
-            fileType: 'audio/webm', // Special type for audio
-            fileName: 'Voice Message.webm',
-            text: 'Voice Message', // Required for server validation
-            content: base64Audio,
-            timestamp: new Date().toISOString()
-          };
-          socketRef.current.emit('chat-message', msgData);
-          handleCancelAudio(); // Clear preview after sending
-        };
+        sendFileWithProgress(audioBlob, 'Voice Message.webm', 'Voice Message', 'audio/webm');
+        handleCancelAudio();
     }
   };
 
@@ -553,6 +616,7 @@ const Chat = ({ username, onLogout, settings, onSettingsChange, onUsernameChange
 
   const handleConfirmJoin = (password) => {
     if (targetRoom) {
+      setJoinError(''); // Clear previous error
       socketRef.current.emit('join-room', { roomName: targetRoom.name, password, username });
       setShowMobileChat(true);
     }
@@ -619,10 +683,20 @@ const Chat = ({ username, onLogout, settings, onSettingsChange, onUsernameChange
         onAcceptInvite={(note) => {
              // Leave current, join new
              if (currentRoom) socketRef.current.emit('leave-room', { roomName: currentRoom });
-             attemptingJoinRef.current = note.roomName; // Track attempt
-             socketRef.current.emit('join-room', { roomName: note.roomName });
-             // Don't remove yet, wait for success or failure
-             // We'll remove on success (joined-room) or mark expired on error
+             // Check if the room is private/password-protected
+             const roomInfo = rooms.find(r => r.name === note.roomName);
+             if (roomInfo && roomInfo.isPrivate) {
+               // Open password modal for this room
+               setTargetRoom({ name: note.roomName, isPrivate: true });
+               setJoinError('');
+               setShowJoinModal(true);
+               // Remove the notification
+               setNotifications(prev => prev.filter(n => n !== note));
+             } else {
+               attemptingJoinRef.current = note.roomName; // Track attempt
+               socketRef.current.emit('join-room', { roomName: note.roomName });
+               // Don't remove yet, wait for success or failure
+             }
         }}
         onDeclineInvite={(note) => {
              setNotifications(prev => prev.filter(n => n !== note));
@@ -827,12 +901,51 @@ const Chat = ({ username, onLogout, settings, onSettingsChange, onUsernameChange
                         msg={msg} 
                         currentUser={username} 
                         isSequence={isSequence}
+                        onMediaView={setMediaViewerData}
                       />
                     );
                   })}
                 <TypingIndicator typingUsers={typingUsers} />
                 <div ref={messagesEndRef} />
               </div>
+
+             {/* Upload Progress Bars */}
+             {uploadProgress && (
+               <div className="upload-progress-bar">
+                 <div className="upload-progress-info">
+                   <span className="upload-progress-icon">⬆️</span>
+                   <span className="upload-progress-name">{uploadProgress.fileName}</span>
+                   <span className="upload-progress-size">
+                     {(uploadProgress.loaded / (1024 * 1024)).toFixed(1)}MB / {(uploadProgress.total / (1024 * 1024)).toFixed(1)}MB
+                   </span>
+                 </div>
+                 <div className="upload-progress-track">
+                   <div 
+                     className={`upload-progress-fill ${uploadProgress.status === 'complete' ? 'complete' : ''}`}
+                     style={{ width: `${Math.round((uploadProgress.loaded / uploadProgress.total) * 100)}%` }}
+                   />
+                 </div>
+               </div>
+             )}
+
+             {/* Incoming Upload Progress */}
+             {Object.values(incomingUploads).map(upload => (
+               <div className="upload-progress-bar incoming" key={upload.uploadId}>
+                 <div className="upload-progress-info">
+                   <span className="upload-progress-icon">⬇️</span>
+                   <span className="upload-progress-name">{upload.username}: {upload.fileName}</span>
+                   <span className="upload-progress-size">
+                     {(upload.loaded / (1024 * 1024)).toFixed(1)}MB / {(upload.total / (1024 * 1024)).toFixed(1)}MB
+                   </span>
+                 </div>
+                 <div className="upload-progress-track">
+                   <div 
+                     className="upload-progress-fill"
+                     style={{ width: `${Math.round((upload.loaded / upload.total) * 100)}%` }}
+                   />
+                 </div>
+               </div>
+             ))}
 
              <div className="input-wrapper">
                {audioPreview ? (
@@ -970,8 +1083,10 @@ const Chat = ({ username, onLogout, settings, onSettingsChange, onUsernameChange
           onClose={() => {
             setShowJoinModal(false);
             setTargetRoom(null);
+            setJoinError('');
           }}
           onJoin={handleConfirmJoin}
+          error={joinError}
         />
       )}
 
@@ -985,6 +1100,11 @@ const Chat = ({ username, onLogout, settings, onSettingsChange, onUsernameChange
         username={username}
         onUsernameChange={handleUsernameEdit}
       />
+
+      {/* Media Viewer Lightbox */}
+      {mediaViewerData && (
+        <MediaViewer data={mediaViewerData} onClose={() => setMediaViewerData(null)} />
+      )}
     </div>
   );
 };

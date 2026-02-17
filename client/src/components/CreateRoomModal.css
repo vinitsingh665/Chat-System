@@ -76,6 +76,20 @@
   box-shadow: 0 0 0 3px var(--color-primary-glow);
 }
 
+.form-group input.input-error {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.field-error {
+  display: block;
+  color: #ef4444;
+  font-size: 0.8rem;
+  margin-top: 6px;
+  font-weight: 500;
+  animation: fadeIn 0.2s ease;
+}
+
 .modal-actions {
   display: flex;
   justify-content: flex-end;
